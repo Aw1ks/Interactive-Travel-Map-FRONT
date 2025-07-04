@@ -26,6 +26,12 @@
         </button>
     </div>
 
+    <div id="post-box">
+        <div id="add-post">
+            <p>Добавить пост</p>
+        </div>
+    </div>
+
     <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
@@ -60,6 +66,12 @@
                     });
             });
         }
+
+        let post_boxDiv = document.getElementById('#post-box');
+
+        post_boxDiv.document.addEventListener('click', function() {
+            addPost()
+        });
 
     </script>
     <script src="script.js"></script>
