@@ -41,17 +41,81 @@
   height: 20px;
 }
 
-.checkbox {
-  display: none;
+#post-box {
+  font-family: "Oswald", sans-serif;
+  font-weight: 500;
+  font-size: 35px;
+  background-color: #20521f5a;
+  backdrop-filter: blur(3px);
+  width: auto;
+  height: 80px;
+  border-radius: 15px;
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+  z-index: 401;
+  cursor: pointer;
+  position: absolute;
+  top: 90%;
+  left: 80%;
+  text-align: center;
+  padding: 15px;
+  transition: background-color 0.5s;
+}
+
+#post-box:hover {
+  background-color: #277e26d5;
+}
+
+#add_post {
+  cursor: pointer;
 }
 
 
-/* 
------- WINDOW ------ 
-*/
 
+
+/* ------POST------ */
+
+.post {
+  width: 50%;
+  height: 50%;
+  background: #000000;
+  z-index: 1000;
+}
+
+.post-container {
+
+}
+
+.post-comment {
+
+}
+
+.upload_post_image_container {
+
+}
+
+.upload_post-image {
+
+}
+
+.send_post-comment {
+
+}
+
+.upload_post-image {
+
+}
+
+.cancel_sending {
+  
+}
+
+
+/* ------ WINDOW ------ */
 
 .custom-popup {
+  display: none;
   position: absolute;
   overflow-x: hidden;
   top: 0;
@@ -66,6 +130,7 @@
 }
 
 .custom-popup.show {
+  display: block;
   right: 0; 
 }
 
@@ -143,6 +208,45 @@
   height: 150px;
   border-radius: 20px;
 }
+
+.country-information_wrqpper {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 110%;
+  background: #71717127;
+  box-shadow: 0 0 50px #7171716b;
+  margin-bottom: 30px;
+  margin-top: 30px;
+}
+
+.capital, .president, .population {
+  font-family: "Andika", sans-serif;
+  font-weight: 400;
+  width: 80%;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.capital-icon, .president-icon, .population-icon {
+  margin-left: 40px;
+  width: 40px;
+  height: 40px;
+  background: #ffffff;
+  padding: 5px;
+  border-radius: 10px;
+  margin-right: 20px;
+}
+
+.capital-info, .president-info, .population-info {
+  width: 500px;
+}
+
 
 /* ------КОММЕНТАРИИ ПУТЕШЕСТВЕННИКОВ------ */
 .traveler-reviews {
@@ -256,7 +360,8 @@
 
 .send-comment {
   position: relative;
-  bottom: 84px;
+  bottom: 85px;
+  left: -5%;
   background: #5aaaa0;
   cursor: pointer;
   width: 120px;
