@@ -13,8 +13,6 @@ function openCustomPopup(content) {
     const popup_container = document.createElement('div');
     popup_container.className = 'popup-container';
 
-
-    
     /* ------ТЕКСТОВАЯ ИНФОРМАЦИЯ------ */
     const background_heading = document.createElement('div');
     background_heading.className = 'background-heading'
@@ -30,15 +28,62 @@ function openCustomPopup(content) {
     country_description.className = 'country-description';
     country_description.textContent = 'Российская Федерация — крупнейшее в мире государство, занимающее 1/8 часть суши и расположенное на северо-востоке Евразии. Россия — страна с многовековой историей, богатым культурным наследием и щедрой природой. В России можно найти почти всё то, что встречает путешественник по отдельности в той или иной стране — солнечные пляжи субтропиков и снежные горные вершины, бескрайние степи и глухие леса, бурные реки и тёплые моря.' 
     
-    /* ------FLAG------ */
+    /* ------ФЛАГ------ */
     const country_flag_container = document.createElement('div');
     country_flag_container.className = 'country-flag-container';
     
     const country_flag = document.createElement('img');
     country_flag.className = 'country-flag';
     country_flag.src = 'images/media/flags/test_flag.png';
+
+    /* ------ИНФОРМАЦИЯ О СТРАНЕ------ */
+    const country_information_wrapper = document.createElement('div');
+    country_information_wrapper.className = 'country-information_wrqpper';
+
+    // ------капитал------
+    const capital = document.createElement('div');
+    capital.className = 'capital';
+
+    const capital_icon = document.createElement('img');
+    capital_icon.className = 'capital-icon';
+    capital_icon.src = 'images/icons/capital_icon.png';
+    capital.appendChild(capital_icon);
+
+    const capital_info = document.createElement('h2');
+    capital_info.className = 'capital-info';
+    capital_info.textContent = `На данный момент капитал страны - ${content.capital}`;
+    capital.appendChild(capital_info);
+
+    // ------президент------
+    const president = document.createElement('div');
+    president.className = 'president';
+
+    const president_icon = document.createElement('img');
+    president_icon.className = 'president-icon';
+    president_icon.src = 'images/icons/president_icon.png';
+    president.appendChild(president_icon);
+
+    const president_info = document.createElement('h2');
+    president_info.className = 'president-info';
+    president_info.textContent = `Президент страны - ${content.president}`;
+    president.appendChild(president_info);
+
+    // ------население------
+    const population = document.createElement('div');
+    population.className = 'population';
+
+    const population_icon = document.createElement('img');
+    population_icon.className = 'population-icon';
+    population_icon.src = 'images/icons/population_icon.png';
+    population.appendChild(population_icon);
+
+    const population_info = document.createElement('h2');
+    population_info.className = 'population-info';
+    population_info.textContent = `Население страны - ${content.population}`;
+    population.appendChild(population_info);
+
     
-    /* ------COMMENTS------ */
+    /* ------КОММЕНТАРИИ------ */
     const traveler_reviews = document.createElement('div');
     traveler_reviews.className = 'traveler-reviews';
     traveler_reviews.textContent = 'Впечатления путешественников';
@@ -159,8 +204,6 @@ function openCustomPopup(content) {
         upload_image.click();
     };
 
-    
-    
     user_comment_container.appendChild(user_comment);
     user_comment_container.appendChild(upload_image_container);
     upload_image_container.appendChild(upload_image);
@@ -175,6 +218,10 @@ function openCustomPopup(content) {
     country_information_container.appendChild(country_description);
     country_information_container.appendChild(country_flag_container);
     country_flag_container.appendChild(country_flag);
+    popup_container.appendChild(country_information_wrapper);
+    country_information_wrapper.appendChild(capital);
+    country_information_wrapper.appendChild(president);
+    country_information_wrapper.appendChild(population);
     popup_container.appendChild(traveler_reviews);
     popup_container.appendChild(commentsContainer);
     popup_container.appendChild(user_comment_container);
@@ -213,6 +260,7 @@ function openCustomPopup(content) {
     });
 }
 
+/* ------ФУНКЦИЯ ЗАКРЫТИЯ ОКНА------ */
 function closePopup() {
     if (activePopup) {
         activePopup.classList.remove('show');
@@ -221,6 +269,7 @@ function closePopup() {
 
 addMarkers(cities);
 
+/* ------ПОЛУЧЕНИЕ ЛОКАЦИИ ПО ВВОДУ ПОЛЬЗОВАТЕЛЯ------ */
 document.getElementById('search-button').addEventListener('click', function() {
     var searchTerm = document.getElementById('search-input').value.toLowerCase();
     var foundCities = cities.filter(city => city.name.toLowerCase().includes(searchTerm) || city.country.toLowerCase().includes(searchTerm));
@@ -231,4 +280,67 @@ document.getElementById('search-button').addEventListener('click', function() {
         alert("Ничего не найдено.");
     }
 });
+
+
+
+
+let activePost = null;
+
+
+function addPost() {
+    if (activePost) {
+        document.body.removeChild(activePost);
+        activePost = null;
+    }
+
+    const postDiv = document.createElement('div');
+    postDiv.className = 'post';
+    
+    const post_container = document.createElement('div');
+    post_container.className = 'post-container';
+    
+    const post_comment = document.createElement('input');
+    post_comment.className = 'post-comment';
+    post_comment.type = 'text'; 
+    post_comment.placeholder = 'Введите комментарий'; 
+    
+    const upload_post_image_container = document.createElement('div');
+    upload_post_image_container.className = 'upload_post_image_container';
+    
+    const upload_post_image = document.createElement('input');
+    upload_post_image.className = 'upload_post-image';
+    upload_post_image.type = 'file'; 
+    upload_post_image.accept = 'images/media'; 
+    upload_post_image.multiple = false; 
+    
+    const send_post_comment = document.createElement('button');
+    send_post_comment.className = 'send_post-comment';
+    send_post_comment.textContent = 'Отправить'; 
+    
+    const upload_postButton = document.createElement('button');
+    upload_postButton.className = 'upload_post-image';
+    upload_postButton.innerText = 'Выбрать изображение';
+    
+    const cancel_sending = document.createElement('button');
+    cancel_sending.className = 'cancel_sending';
+    cancel_sending.textContent = 'Отменить'; 
+    
+    upload_postButton.onclick = () => {
+        upload_post_image.click();
+    };
+    
+    
+    postDiv.appendChild(post_container);
+    post_container.appendChild(post_comment);
+    post_container.appendChild(upload_post_image_container);
+    upload_post_image_container.appendChild(upload_post_image);
+    post_container.appendChild(send_post_comment);
+    upload_post_image_container.appendChild(upload_postButton);
+    post_container.appendChild(cancel_sending);
+    
+    document.body.appendChild(postDiv);
+}
+
+
+
 
