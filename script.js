@@ -1,6 +1,6 @@
-/* ------ ФУНКЦИЯ ДЛЯ ОТКРЫТИЯ ОКНА С ИНФОЙ СТРАНЫ | ГОРОДА------ */ 
 let activePopup = null;
 
+/* ------ ФУНКЦИЯ ДЛЯ ОТКРЫТИЯ ОКНА С ИНФОЙ СТРАНЫ | ГОРОДА------ */ 
 function openCustomPopup(content) {
     if (activePopup) {
         document.body.removeChild(activePopup);
@@ -16,7 +16,6 @@ function openCustomPopup(content) {
     /* ------ТЕКСТОВАЯ ИНФОРМАЦИЯ------ */
     const background_heading = document.createElement('div');
     background_heading.className = 'background-heading'
-    background_heading.style.backgroundImage = `url('${content.country_information.image}')`;
     
     const heading = document.createElement('h2');
     heading.className = 'country-name';
@@ -27,7 +26,15 @@ function openCustomPopup(content) {
     
     const country_description = document.createElement('div');
     country_description.className = 'country-description';
-    country_description.textContent = content.country_information.description
+    country_description.textContent = 'Российская Федерация — крупнейшее в мире государство, занимающее 1/8 часть суши и расположенное на северо-востоке Евразии. Россия — страна с многовековой историей, богатым культурным наследием и щедрой природой. В России можно найти почти всё то, что встречает путешественник по отдельности в той или иной стране — солнечные пляжи субтропиков и снежные горные вершины, бескрайние степи и глухие леса, бурные реки и тёплые моря.' 
+    
+    /* ------ФЛАГ------ */
+    const country_flag_container = document.createElement('div');
+    country_flag_container.className = 'country-flag-container';
+    
+    const country_flag = document.createElement('img');
+    country_flag.className = 'country-flag';
+    country_flag.src = 'images/media/flags/test_flag.png';
 
     /* ------ИНФОРМАЦИЯ О СТРАНЕ------ */
     const country_information_wrapper = document.createElement('div');
@@ -44,7 +51,7 @@ function openCustomPopup(content) {
 
     const capital_info = document.createElement('h2');
     capital_info.className = 'capital-info';
-    capital_info.textContent = `На данный момент капитал страны - ${content.country_information.country_info.capital}`;
+    capital_info.textContent = `На данный момент капитал страны - ${content.capital}`;
     capital.appendChild(capital_info);
 
     // ------президент------
@@ -58,7 +65,7 @@ function openCustomPopup(content) {
 
     const president_info = document.createElement('h2');
     president_info.className = 'president-info';
-    president_info.textContent = `Президент страны - ${content.country_information.country_info.president}`;
+    president_info.textContent = `Президент страны - ${content.president}`;
     president.appendChild(president_info);
 
     // ------население------
@@ -72,7 +79,7 @@ function openCustomPopup(content) {
 
     const population_info = document.createElement('h2');
     population_info.className = 'population-info';
-    population_info.textContent = `Население страны - ${content.country_information.country_info.population}`;
+    population_info.textContent = `Население страны - ${content.population}`;
     population.appendChild(population_info);
 
     
@@ -84,37 +91,40 @@ function openCustomPopup(content) {
     const commentsContainer = document.createElement('div');
     commentsContainer.className = 'comments-popup_container';
 
-    const commentsData = [];
-
-    content.postData.forEach(post => {
-        const fullAddress = `${post.address.street}, ${post.address.city}, ${post.address.country}`;
-        const words = post.description.split(/\s+/);
-
-        const processedWords = words.map(word => {
-            if (word.length > 15) {
-                let newWord = '';
-                for (let i = 0; i < word.length; i += 5) {
-                    newWord += word.substring(i, i + 5);
-                    if (i + 5 < word.length) {
-                        newWord += '-';
-                    }
-                }
-                return newWord;
-            } else {
-                return word;
-            }
-        });
-        
-        post.description = processedWords.join(' ');
-
-        commentsData.push({
+    const commentsData = [
+        {
             avatar: 'images/icons/avatar.png',
-            image: post.image,
-            message: post.description,
-            post_date: post.date,
-            post_addres: fullAddress
-        });
-    });
+            message: 'Первый комментарий!',
+        },
+        {
+            avatar: 'images/icons/avatar.png',
+            message: 'Второй комментарий.',
+        },
+        {
+            avatar: 'images/icons/avatar.png',
+            message: 'Второй комментарий.',
+        },
+        {
+            avatar: 'images/icons/avatar.png',
+            message: 'Второй комментарий.',
+        },
+        {
+            avatar: 'images/icons/avatar.png',
+            message: 'Второй комментарий.',
+        },
+        {
+            avatar: 'images/icons/avatar.png',
+            message: 'Второй комментарий.',
+        },
+        {
+            avatar: 'images/icons/avatar.png',
+            message: 'Второй комментарий.',
+        },
+        {
+            avatar: 'images/icons/avatar.png',
+            message: 'Третий комментарий, который скрыт по умолчанию.',
+        }
+    ];
 
     commentsData.slice(0, 2).forEach(comment => {
         const commentDiv = document.createElement('div');
@@ -124,56 +134,12 @@ function openCustomPopup(content) {
         avatar.src = comment.avatar;
         avatar.className = 'avatar';
 
-        if (comment.image && comment.image.length > 0) {
-            const post_image = document.createElement('img');
-            post_image.className = 'post_image';
-            post_image.src = comment.image;
-            post_image.alt = 'Картинка поста';
-
-            commentDiv.appendChild(post_image);
-        }
-
-        const post_info_container = document.createElement('div');
-        post_info_container.className = 'post_info-container';
-
-        const full_place_post = document.createElement('h3');
-        full_place_post.className = 'full_place-post';
-        full_place_post.textContent = `Адрес - ${comment.post_addres}`;
-
-        full_place_post.addEventListener('click', function() {
-            const address = comment.post_addres;
-
-            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.length > 0) {
-                        const place = data[0];
-                        console.log(`Координаты: ${place.lat}, ${place.lon}`);
-
-                        const place_lat = place.lat - 0.06;
-                        const place_lon = place.lon + 8;
-
-                        map.setView([place_lat, place_lon], 11);
-                    } else {
-                        console.log("Местоположение не найдено");
-                    }
-                })
-                .catch(error => console.error('Ошибка:', error));
-        });
-
-        const post_publication_date = document.createElement('h3');
-        post_publication_date.className = 'post_publication_date';
-        post_publication_date.textContent = `Дата публикации - ${comment.post_date}`;
-
         const message = document.createElement('div');
         message.className = 'message';
         message.textContent = comment.message;
 
-        commentDiv.appendChild(post_info_container);
-        post_info_container.appendChild(full_place_post); 
-        post_info_container.appendChild(post_publication_date); 
-        commentDiv.appendChild(avatar);          
-        commentDiv.appendChild(message);    
+        commentDiv.appendChild(avatar);
+        commentDiv.appendChild(message);
 
         commentsContainer.appendChild(commentDiv);
     });
@@ -193,56 +159,12 @@ function openCustomPopup(content) {
                 avatar.src = comment.avatar;
                 avatar.className = 'avatar';
 
-                if (comment.image && comment.image.length > 0) {
-                    const post_image = document.createElement('img');
-                    post_image.className = 'post_image';
-                    post_image.src = comment.image;
-                    post_image.alt = 'Картинка поста';
-
-                    commentDiv.appendChild(post_image);
-                }
-
-                const post_info_container = document.createElement('div');
-                post_info_container.className = 'post_info-container';
-
-                const full_place_post = document.createElement('h3');
-                full_place_post.className = 'full_place-post';
-                full_place_post.textContent = `Адрес - ${comment.post_addres}`;
-
-                full_place_post.addEventListener('click', function() {
-                    const address = comment.post_addres;
-
-                    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.length > 0) {
-                                const place = data[0];
-                                console.log(`Координаты: ${place.lat}, ${place.lon}`);
-
-                                const place_lat = place.lat - 0.06;
-                                const place_lon = place.lon + 8;
-
-                                map.setView([place_lat, place_lon], 11);
-                            } else {
-                                console.log("Местоположение не найдено");
-                            }
-                        })
-                        .catch(error => console.error('Ошибка:', error));
-                });
-
-                const post_publication_date = document.createElement('h3');
-                post_publication_date.className = 'post_publication_date';
-                post_publication_date.textContent = `Дата публикации - ${comment.post_date}`;
-
                 const message = document.createElement('div');
                 message.className = 'message';
                 message.textContent = comment.message;
 
-                commentDiv.appendChild(post_info_container);
-                post_info_container.appendChild(full_place_post); 
-                post_info_container.appendChild(post_publication_date); 
-                commentDiv.appendChild(avatar);          
-                commentDiv.appendChild(message);    
+                commentDiv.appendChild(avatar);
+                commentDiv.appendChild(message);
 
                 commentsContainer.appendChild(commentDiv);
             });
@@ -291,9 +213,11 @@ function openCustomPopup(content) {
 
     /* ------ДОБАВЛЯЕМ ЭЛЕМЕНТЫ НА СТРАНИЦУ------ */
     popup_container.appendChild(background_heading);
-    popup_container.appendChild(heading)
+    background_heading.appendChild(heading)
     popup_container.appendChild(country_information_container);
     country_information_container.appendChild(country_description);
+    country_information_container.appendChild(country_flag_container);
+    country_flag_container.appendChild(country_flag);
     popup_container.appendChild(country_information_wrapper);
     country_information_wrapper.appendChild(capital);
     country_information_wrapper.appendChild(president);
@@ -309,10 +233,10 @@ function openCustomPopup(content) {
     document.body.appendChild(popupDiv);
 
     setTimeout(() => {
-        popupDiv.classList.add('show');
+            popupDiv.classList.add('show');
 
-        const currentCenter_open = map.getCenter();
-        map.panTo([currentCenter_open.lat, currentCenter_open.lng + 0.3], { animate: true });
+            const currentCenter_open = map.getCenter();
+            map.panTo([currentCenter_open.lat, currentCenter_open.lng + 0.2], { animate: true });
     }, 10);
 
     activePopup = popupDiv;
@@ -332,10 +256,9 @@ function openCustomPopup(content) {
         closePopup();
 
         const currentCenter_close = map.getCenter();
-        map.panTo([currentCenter_close.lat, currentCenter_close.lng - 0.3], { animate: true });
+        map.panTo([currentCenter_close.lat, currentCenter_close.lng - 0.2], { animate: true });
     });
 }
-
 
 /* ------ФУНКЦИЯ ЗАКРЫТИЯ ОКНА------ */
 function closePopup() {
@@ -344,22 +267,42 @@ function closePopup() {
     }
 }
 
+addMarkers(cities);
 
-/* ------ДОБАВЛЕНИЕ ПОСТА------ */
-let isAddingPost = false;
-let currentPostDiv = null;
+/* ------ПОЛУЧЕНИЕ ЛОКАЦИИ ПО ВВОДУ ПОЛЬЗОВАТЕЛЯ------ */
+document.getElementById('search-button').addEventListener('click', function() {
+    var searchTerm = document.getElementById('search-input').value.toLowerCase();
+    var foundCities = cities.filter(city => city.name.toLowerCase().includes(searchTerm) || city.country.toLowerCase().includes(searchTerm));
+
+    if (foundCities.length > 0) {
+        map.setView([foundCities[0].lat, foundCities[0].lng], 10);
+    } else {
+        alert("Ничего не найдено.");
+    }
+});
+
+
+
+
+let activePost = null;
+
 
 function addPost() {
+    if (activePost) {
+        document.body.removeChild(activePost);
+        activePost = null;
+    }
+
     const postDiv = document.createElement('div');
     postDiv.className = 'post';
-
+    
     const post_container = document.createElement('div');
     post_container.className = 'post-container';
     
     const post_comment = document.createElement('input');
     post_comment.className = 'post-comment';
     post_comment.type = 'text'; 
-    post_comment.placeholder = 'Введите текст поста'; 
+    post_comment.placeholder = 'Введите комментарий'; 
     
     const upload_post_image_container = document.createElement('div');
     upload_post_image_container.className = 'upload_post_image_container';
@@ -386,6 +329,7 @@ function addPost() {
         upload_post_image.click();
     };
     
+    
     postDiv.appendChild(post_container);
     post_container.appendChild(post_comment);
     post_container.appendChild(upload_post_image_container);
@@ -393,27 +337,10 @@ function addPost() {
     post_container.appendChild(send_post_comment);
     upload_post_image_container.appendChild(upload_postButton);
     post_container.appendChild(cancel_sending);
-
+    
     document.body.appendChild(postDiv);
-
-    currentPostDiv = postDiv;
 }
 
-document.getElementById('post-box').addEventListener('click', function() {
-    if (!isAddingPost) {
-        addPost();
-        isAddingPost = true;
-    }
-});
 
-document.addEventListener('click', function(event) {
-    if (isAddingPost && currentPostDiv) {
-        const postBox = document.getElementById('post-box');
-        if (!currentPostDiv.contains(event.target) && !postBox.contains(event.target)) {
 
-            currentPostDiv.remove();
-            currentPostDiv = null;
-            isAddingPost = false;
-        }
-    }
-});
+
